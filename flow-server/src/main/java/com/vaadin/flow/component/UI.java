@@ -685,10 +685,11 @@ public class UI extends Component
      * 
      * @param navigationTarget
      *            navigation target to navigate to
+     * @return the HTTP status code resulting from the navigation
      */
-    public void navigate(Class<? extends Component> navigationTarget) {
+    public int navigate(Class<? extends Component> navigationTarget) {
         String routeUrl = getRouter().getUrl(navigationTarget);
-        navigate(routeUrl);
+        return navigate(routeUrl);
     }
 
     /**
@@ -711,11 +712,12 @@ public class UI extends Component
      *            url parameter type
      * @param <C>
      *            navigation target type
+     * @return the HTTP status code resulting from the navigation
      */
-    public <T, C extends Component & HasUrlParameter<T>> void navigate(
+    public <T, C extends Component & HasUrlParameter<T>> int navigate(
             Class<? extends C> navigationTarget, T parameter) {
         String routeUrl = getRouter().getUrl(navigationTarget, parameter);
-        navigate(routeUrl);
+        return navigate(routeUrl);
     }
 
     /**
@@ -730,9 +732,10 @@ public class UI extends Component
      *
      * @param location
      *            the location to navigate to, not {@code null}
+     * @return the HTTP status code resulting from the navigation
      */
-    public void navigate(String location) {
-        navigate(location, QueryParameters.empty());
+    public int navigate(String location) {
+        return navigate(location, QueryParameters.empty());
     }
 
     /**
@@ -751,8 +754,9 @@ public class UI extends Component
      * @param queryParameters
      *            query parameters that are used for navigation, not
      *            {@code null}
+     * @return the HTTP status code resulting from the navigation
      */
-    public void navigate(String location, QueryParameters queryParameters) {
+    public int navigate(String location, QueryParameters queryParameters) {
         if (location == null) {
             throw new IllegalArgumentException("Location may not be null");
         }
@@ -769,7 +773,7 @@ public class UI extends Component
             // Enable navigating back
             getPage().getHistory().pushState(null, navigationLocation);
         }
-        getRouter().navigate(this, navigationLocation,
+        return getRouter().navigate(this, navigationLocation,
                 NavigationTrigger.PROGRAMMATIC);
     }
 
